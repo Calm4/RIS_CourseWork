@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "MrbDLcadMTLdInQMJcccE05z/ITRf2BeapTDYLyAahP8P6TP2uZ3Oq0tZOdY/n41MX8x6hPjx5CyMAD19w/+Uw==",
+  "dgSpecHash": "aqPiq/jtz1WmA3pzm7HX9htRUWh3/OHFjqKZ3yIQqozq0kXp2CZiEQIckwqYYxss8xA2lkhTFLak3QgA6tyXPQ==",
   "success": true,
   "projectFilePath": "C:\\Projects\\year_4_sem_1\\RIS\\CourseWork\\RIS_CourseWork\\BrightnessCorrectorApplication\\ServerApp\\ServerApp.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Даник\\.nuget\\packages\\microsoft.win32.systemevents\\8.0.0\\microsoft.win32.systemevents.8.0.0.nupkg.sha512",
+    "C:\\Users\\Даник\\.nuget\\packages\\system.drawing.common\\8.0.8\\system.drawing.common.8.0.8.nupkg.sha512"
+  ],
   "logs": []
 }
