@@ -3,6 +3,8 @@ C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplic
 C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\bin\Debug\net8.0-windows\ClientApp.runtimeconfig.json
 C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\bin\Debug\net8.0-windows\ClientApp.dll
 C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\bin\Debug\net8.0-windows\ClientApp.pdb
+C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\obj\Debug\net8.0-windows\MainWindow.baml
+C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\obj\Debug\net8.0-windows\MainWindow.g.cs
 C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\obj\Debug\net8.0-windows\App.g.cs
 C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\obj\Debug\net8.0-windows\ClientApp_MarkupCompile.cache
 C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\obj\Debug\net8.0-windows\ClientApp.g.resources
@@ -21,5 +23,3 @@ C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplic
 C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll
 C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\obj\Debug\net8.0-windows\ClientApp.csproj.AssemblyReference.cache
 C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\obj\Debug\net8.0-windows\ClientApp.csproj.CopyComplete
-C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\obj\Debug\net8.0-windows\ClientWindow.baml
-C:\Projects\year_4_sem_1\RIS\CourseWork\RIS_CourseWork\BrightnessCorrectorApplication\ClientApp\obj\Debug\net8.0-windows\ClientWindow.g.cs
