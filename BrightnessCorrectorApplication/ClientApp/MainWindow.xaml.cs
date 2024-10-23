@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace ImageProcessingClient
@@ -16,25 +17,47 @@ namespace ImageProcessingClient
         public MainWindow()
         {
             InitializeComponent();
+            // Отключаем кнопки обработки по умолчанию
+            btnLinearMode.IsEnabled = false;
+            btnMultithreadedMode.IsEnabled = false;
         }
 
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            string serverIp = ServerIpTextBox.Text;
-            int port = 8888;
-
-            try
+            if (_clientSocket == null || !_clientSocket.Connected)
             {
-                // Настраиваем сокет клиента
-                _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                _clientSocket.Connect(new IPEndPoint(IPAddress.Parse(serverIp), port));
+                string serverIp = ServerIpTextBox.Text;
+                int port = 8888;
 
-                StatusLabel.Text = "Connected to server.";
-                UploadButton.IsEnabled = true;
+                try
+                {
+                    // Настраиваем сокет клиента
+                    _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    _clientSocket.Connect(new IPEndPoint(IPAddress.Parse(serverIp), port));
+
+                    StatusLabel.Text = "Подключено к серверу.";
+                    ConnectButton.Content = "Отключиться";
+                    ConnectButton.Background = new SolidColorBrush(Color.FromRgb(255, 69, 0)); // Красный цвет для отключения
+                    UploadButton.IsEnabled = true;
+                    btnLinearMode.IsEnabled = true; // Включаем кнопки обработки
+                    btnMultithreadedMode.IsEnabled = true; // Включаем кнопки обработки
+                }
+                catch (Exception ex)
+                {
+                    StatusLabel.Text = $"Не удалось подключиться: {ex.Message}";
+                }
             }
-            catch (Exception ex)
+            else
             {
-                StatusLabel.Text = $"Failed to connect: {ex.Message}";
+                // Отключение от сервера
+                _clientSocket.Close();
+                _clientSocket = null;
+                StatusLabel.Text = "Отключено от сервера.";
+                ConnectButton.Content = "Подключиться";
+                ConnectButton.Background = new SolidColorBrush(Color.FromRgb(0, 122, 204)); // Синий цвет для подключения
+                UploadButton.IsEnabled = false;
+                btnLinearMode.IsEnabled = false; // Отключаем кнопки обработки
+                btnMultithreadedMode.IsEnabled = false; // Отключаем кнопки обработки
             }
         }
 
@@ -51,21 +74,21 @@ namespace ImageProcessingClient
                 // Отображаем выбранное изображение
                 OriginalImage.Source = new BitmapImage(new Uri(imagePath));
 
-                StatusLabel.Text = "Image loaded. Select processing mode.";
+                StatusLabel.Text = "Изображение загружено. Выберите режим обработки.";
             }
         }
 
         private void btnLinearMode_Click(object sender, RoutedEventArgs e)
         {
             isMultithreaded = false;
-            StatusLabel.Text = "Selected mode: Linear";
+            StatusLabel.Text = "Выбран режим: Линейный";
             ProcessImage(); // Запуск обработки в линейном режиме
         }
 
         private void btnMultithreadedMode_Click(object sender, RoutedEventArgs e)
         {
             isMultithreaded = true;
-            StatusLabel.Text = "Selected mode: Multithreaded";
+            StatusLabel.Text = "Выбран режим: Многопоточный";
             ProcessImage(); // Запуск обработки в многопоточном режиме
         }
 
@@ -78,18 +101,18 @@ namespace ImageProcessingClient
                     // Отправляем режим обработки (0 - линейный, 1 - многопоточный)
                     byte processingMode = isMultithreaded ? (byte)1 : (byte)0;
                     _clientSocket.Send(new[] { processingMode });
-                    Console.WriteLine($"Sent processing mode: {processingMode}");
+                    Console.WriteLine($"Отправлен режим обработки: {processingMode}");
 
                     // Отправляем размер изображения
                     byte[] imageSize = BitConverter.GetBytes(_imageBytes.Length);
                     _clientSocket.Send(imageSize);
-                    Console.WriteLine($"Sent image size: {_imageBytes.Length}");
+                    Console.WriteLine($"Отправлен размер изображения: {_imageBytes.Length}");
 
                     // Отправляем само изображение
                     _clientSocket.Send(_imageBytes);
-                    Console.WriteLine("Sent image bytes to server.");
+                    Console.WriteLine("Отправлены байты изображения на сервер.");
 
-                    StatusLabel.Text = "Image sent to server for processing.";
+                    StatusLabel.Text = "Изображение отправлено на сервер для обработки.";
 
                     // Получаем обработанное изображение от сервера
                     byte[] processedImageBytes = ReceiveProcessedImage();
@@ -97,17 +120,17 @@ namespace ImageProcessingClient
                     // Отображаем обработанное изображение
                     DisplayProcessedImage(processedImageBytes);
 
-                    StatusLabel.Text = "Image processed and displayed.";
+                    StatusLabel.Text = "Изображение обработано и отображено.";
                 }
                 else
                 {
-                    StatusLabel.Text = "Not connected to the server or image not loaded.";
+                    StatusLabel.Text = "Не подключено к серверу или изображение не загружено.";
                 }
             }
             catch (Exception ex)
             {
-                StatusLabel.Text = $"Failed to send image: {ex.Message}";
-                Console.WriteLine($"Error during processing: {ex.Message}");
+                StatusLabel.Text = $"Не удалось отправить изображение: {ex.Message}";
+                Console.WriteLine($"Ошибка при обработке: {ex.Message}");
             }
         }
 

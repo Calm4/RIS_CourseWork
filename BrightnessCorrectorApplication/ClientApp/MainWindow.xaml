@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ImageProcessingClient.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Image Processing Client" Height="640" Width="800" Background="#f4f4f4">
+        Title="Клиент обработки изображений" Height="640" Width="800" Background="#f4f4f4">
     <Window.Resources>
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#007ACC"/>
@@ -15,6 +15,10 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#005B99"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                    <Setter Property="Foreground" Value="#666666"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -49,61 +53,49 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <!-- Блок кнопок -->
+            <RowDefinition Height="Auto" />
+            <!-- Блок IP и кнопки подключения -->
+            <RowDefinition Height="Auto" />
+            <!-- Блок ползунка яркости -->
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <!-- Блок изображений -->
         </Grid.RowDefinitions>
 
-        <Border Style="{StaticResource ButtonBorderStyle}" Margin="95,20,493,30">
-            <Button x:Name="UploadButton" Content="Upload Image" Style="{StaticResource ButtonStyle}" Click="UploadButton_Click" IsEnabled="False" Margin="0,0,0,0"/>
-        </Border>
-        <!-- Panel for Upload and Brightness -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Margin="0,0,0,10">
-            <StackPanel>
-            <TextBlock HorizontalAlignment="Center" Text="Brightness (%)" Style="{StaticResource TextBlockStyle}" VerticalAlignment="Center"/>
-            <TextBox HorizontalAlignment="Center"  TextAlignment="Center" x:Name="BrightnessTextBox" Style="{StaticResource TextBoxStyle}" Text="50"/>
-            </StackPanel>
+        <!-- Блок кнопок -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Center" Margin="0,10,0,10">
+            <Border Style="{StaticResource ButtonBorderStyle}" Margin="5">
+                <Button x:Name="UploadButton" Content="Загрузить изображение" Style="{StaticResource ButtonStyle}" Click="UploadButton_Click" IsEnabled="False"/>
+            </Border>
+            <Border Style="{StaticResource ButtonBorderStyle}" Margin="5">
+                <Button x:Name="btnLinearMode" Content="Линейная обработка" Style="{StaticResource ButtonStyle}" Click="btnLinearMode_Click"/>
+            </Border>
+            <Border Style="{StaticResource ButtonBorderStyle}" Margin="5">
+                <Button x:Name="btnMultithreadedMode" Content="Многопоточная обработка" Style="{StaticResource ButtonStyle}" Click="btnMultithreadedMode_Click"/>
+            </Border>
         </StackPanel>
 
-        <!-- Image display area -->
-        <Grid Grid.Row="1" Margin="20,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <!-- Original Image -->
-            <StackPanel Margin="0,10,0,0" HorizontalAlignment="Center">
-                <TextBlock Text="Original Image" HorizontalAlignment="Center" Style="{StaticResource TextBlockStyle}"/>
-                <Border BorderBrush="#007ACC" BorderThickness="2" CornerRadius="10" Padding="5">
-                    <Image x:Name="OriginalImage" Stretch="Uniform" MinWidth="300" Height="300"/>
-                </Border>
-            </StackPanel>
-
-            <!-- Processed Image -->
-            <StackPanel Grid.Column="1" Margin="0,10,0,0" HorizontalAlignment="Center">
-                <TextBlock Text="Processed Image" HorizontalAlignment="Center" Style="{StaticResource TextBlockStyle}"/>
-                <Border BorderBrush="#007ACC" BorderThickness="2" CornerRadius="10" Padding="5">
-                    <Image x:Name="ProcessedImage" Stretch="Uniform" MinWidth="300" Height="300"/>
-                </Border>
-            </StackPanel>
-        </Grid>
-
-        <!-- Connection Status -->
-        <StackPanel Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="Server IP:" Style="{StaticResource TextBlockStyle}" VerticalAlignment="Center"/>
-                <TextBox x:Name="ServerIpTextBox" Style="{StaticResource TextBoxStyle}" Text="127.0.0.1" HorizontalAlignment="Center"/>
-                <Border Style="{StaticResource ButtonBorderStyle}">
-                    <Button x:Name="ConnectButton" Content="Connect" Style="{StaticResource ButtonStyle}" Click="ConnectButton_Click"/>
-                </Border>
-            </StackPanel>
-            <TextBlock x:Name="StatusLabel" FontSize="16" Text="Not connected" HorizontalAlignment="Center" Style="{StaticResource TextBlockStyle}" VerticalAlignment="Center"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="484,0,0,20">
-            <Button Name="btnLinearMode" Content="Linear Mode" Click="btnLinearMode_Click" Width="100" Margin="5"/>
-            <Button Name="btnMultithreadedMode" Content="Multithreaded Mode" Click="btnMultithreadedMode_Click" Width="150" Margin="5"/>
+        <!-- Блок IP и кнопки подключения -->
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Margin="0,10,0,10">
+            <TextBox x:Name="ServerIpTextBox" Style="{StaticResource TextBoxStyle}" />
+            <TextBlock Text="IP сервера" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="#aaa"/>
+            <Border Style="{StaticResource ButtonBorderStyle}" Margin="5">
+                <Button x:Name="ConnectButton" Content="Подключиться" Style="{StaticResource ButtonStyle}" Click="ConnectButton_Click"/>
+            </Border>
         </StackPanel>
 
+        <!-- Блок ползунка яркости -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="0,10,0,10">
+            <TextBlock Text="Яркость:" VerticalAlignment="Center" Margin="5,0,0,0" />
+            <Slider x:Name="BrightnessSlider" Minimum="-100" Maximum="100" Value="0" Width="200" Margin="5" />
+        </StackPanel>
+
+        <!-- Блок изображений -->
+        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center" Margin="0,10,0,10">
+            <Image x:Name="OriginalImage" Margin="10" Width="300" Height="300"/>
+            <Image x:Name="ProcessedImage" Margin="10" Width="300" Height="300"/>
+        </StackPanel>
+
+        <TextBlock x:Name="StatusLabel" Style="{StaticResource TextBlockStyle}" Grid.Row="4" Margin="10"/>
     </Grid>
 </Window>
