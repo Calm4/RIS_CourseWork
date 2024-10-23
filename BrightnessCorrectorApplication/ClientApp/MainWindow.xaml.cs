@@ -2,7 +2,6 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -11,6 +10,8 @@ namespace ImageProcessingClient
     public partial class MainWindow : Window
     {
         private Socket _clientSocket;
+        private byte[] _imageBytes; // Данные изображения хранятся здесь после загрузки
+        private bool isMultithreaded = false; // По умолчанию линейный режим
 
         public MainWindow()
         {
@@ -45,81 +46,103 @@ namespace ImageProcessingClient
             if (openFileDialog.ShowDialog() == true)
             {
                 string imagePath = openFileDialog.FileName;
-                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                _imageBytes = System.IO.File.ReadAllBytes(imagePath); // Загружаем изображение в байтовый массив
 
                 // Отображаем выбранное изображение
                 OriginalImage.Source = new BitmapImage(new Uri(imagePath));
 
-                // Получаем яркость из поля ввода
-                int brightness = 50; // значение по умолчанию
-                if (int.TryParse(BrightnessTextBox.Text, out brightness))
-                {
-                    // Отправляем изображение с яркостью на сервер
-                    SendImageToServer(imageBytes, brightness);
-                }
-                else
-                {
-                    StatusLabel.Text = "Invalid brightness value.";
-                }
+                StatusLabel.Text = "Image loaded. Select processing mode.";
             }
         }
 
-        private void SendImageToServer(byte[] imageBytes, int brightness)
+        private void btnLinearMode_Click(object sender, RoutedEventArgs e)
+        {
+            isMultithreaded = false;
+            StatusLabel.Text = "Selected mode: Linear";
+            ProcessImage(); // Запуск обработки в линейном режиме
+        }
+
+        private void btnMultithreadedMode_Click(object sender, RoutedEventArgs e)
+        {
+            isMultithreaded = true;
+            StatusLabel.Text = "Selected mode: Multithreaded";
+            ProcessImage(); // Запуск обработки в многопоточном режиме
+        }
+
+        private void ProcessImage()
         {
             try
             {
-                if (_clientSocket != null && _clientSocket.Connected)
+                if (_clientSocket != null && _clientSocket.Connected && _imageBytes != null)
                 {
-                    // Отправляем длину данных
-                    byte[] dataLength = BitConverter.GetBytes(imageBytes.Length);
-                    _clientSocket.Send(dataLength);
+                    // Отправляем режим обработки (0 - линейный, 1 - многопоточный)
+                    byte processingMode = isMultithreaded ? (byte)1 : (byte)0;
+                    _clientSocket.Send(new[] { processingMode });
+                    Console.WriteLine($"Sent processing mode: {processingMode}");
+
+                    // Отправляем размер изображения
+                    byte[] imageSize = BitConverter.GetBytes(_imageBytes.Length);
+                    _clientSocket.Send(imageSize);
+                    Console.WriteLine($"Sent image size: {_imageBytes.Length}");
 
                     // Отправляем само изображение
-                    _clientSocket.Send(imageBytes);
-
-                    // Отправляем значение яркости
-                    byte[] brightnessBytes = BitConverter.GetBytes(brightness);
-                    _clientSocket.Send(brightnessBytes);
+                    _clientSocket.Send(_imageBytes);
+                    Console.WriteLine("Sent image bytes to server.");
 
                     StatusLabel.Text = "Image sent to server for processing.";
 
                     // Получаем обработанное изображение от сервера
-                    byte[] sizeBuffer = new byte[4];
-                    _clientSocket.Receive(sizeBuffer);
-                    int processedImageSize = BitConverter.ToInt32(sizeBuffer, 0);
-
-                    byte[] processedImageBytes = new byte[processedImageSize];
-                    int totalReceived = 0;
-                    while (totalReceived < processedImageSize)
-                    {
-                        int bytesReceived = _clientSocket.Receive(processedImageBytes, totalReceived, processedImageSize - totalReceived, SocketFlags.None);
-                        totalReceived += bytesReceived;
-                    }
+                    byte[] processedImageBytes = ReceiveProcessedImage();
 
                     // Отображаем обработанное изображение
-                    using (var ms = new System.IO.MemoryStream(processedImageBytes))
-                    {
-                        var bitmap = new BitmapImage();
-                        bitmap.BeginInit();
-                        bitmap.StreamSource = ms;
-                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmap.EndInit();
-                        ProcessedImage.Source = bitmap;
-                    }
+                    DisplayProcessedImage(processedImageBytes);
 
                     StatusLabel.Text = "Image processed and displayed.";
                 }
                 else
                 {
-                    StatusLabel.Text = "Not connected to the server.";
+                    StatusLabel.Text = "Not connected to the server or image not loaded.";
                 }
             }
             catch (Exception ex)
             {
                 StatusLabel.Text = $"Failed to send image: {ex.Message}";
+                Console.WriteLine($"Error during processing: {ex.Message}");
             }
         }
 
+        private byte[] ReceiveProcessedImage()
+        {
+            // Получаем размер обработанного изображения
+            byte[] sizeBuffer = new byte[4];
+            _clientSocket.Receive(sizeBuffer);
+            int processedImageSize = BitConverter.ToInt32(sizeBuffer, 0);
 
+            // Получаем изображение
+            byte[] processedImageBytes = new byte[processedImageSize];
+            int totalReceived = 0;
+            while (totalReceived < processedImageSize)
+            {
+                int bytesReceived = _clientSocket.Receive(processedImageBytes, totalReceived, processedImageSize - totalReceived, SocketFlags.None);
+                totalReceived += bytesReceived;
+            }
+
+            return processedImageBytes;
+        }
+
+        private void DisplayProcessedImage(byte[] processedImageBytes)
+        {
+            using (var ms = new System.IO.MemoryStream(processedImageBytes))
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.StreamSource = ms;
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze(); // Зафиксировать, чтобы избежать блокировок
+
+                ProcessedImage.Source = bitmap; // Отобразить обработанное изображение
+            }
+        }
     }
 }

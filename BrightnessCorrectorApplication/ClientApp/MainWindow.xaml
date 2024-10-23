@@ -100,5 +100,10 @@
             </StackPanel>
             <TextBlock x:Name="StatusLabel" FontSize="16" Text="Not connected" HorizontalAlignment="Center" Style="{StaticResource TextBlockStyle}" VerticalAlignment="Center"/>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="484,0,0,20">
+            <Button Name="btnLinearMode" Content="Linear Mode" Click="btnLinearMode_Click" Width="100" Margin="5"/>
+            <Button Name="btnMultithreadedMode" Content="Multithreaded Mode" Click="btnMultithreadedMode_Click" Width="150" Margin="5"/>
+        </StackPanel>
+
     </Grid>
 </Window>
