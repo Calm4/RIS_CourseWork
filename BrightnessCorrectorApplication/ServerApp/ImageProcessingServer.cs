@@ -8,6 +8,7 @@ using System.Diagnostics;
 public class ImageProcessingServer
 {
     private const int Port = 8888;
+    private static int clientCounter = 0; // Счетчик клиентов
 
     public void StartServer()
     {
@@ -18,12 +19,13 @@ public class ImageProcessingServer
         while (true)
         {
             TcpClient client = listener.AcceptTcpClient();
-            Console.WriteLine("Клиент подключен.");
-            Task.Run(() => HandleClient(client));
+            int clientId = ++clientCounter; // Присваиваем клиенту уникальный ID
+            Console.WriteLine($"Клиент #{clientId} подключен.");
+            Task.Run(() => HandleClient(client, clientId));
         }
     }
 
-    private void HandleClient(TcpClient client)
+    private void HandleClient(TcpClient client, int clientId)
     {
         try
         {
@@ -35,24 +37,24 @@ public class ImageProcessingServer
                 Bitmap image = ReceiveImage(stream);
 
                 // Лог: загрузка изображения
-                Console.WriteLine("Изображение получено от клиента.");
+                Console.WriteLine($"Изображение получено от клиента #{clientId}.");
 
                 Stopwatch stopwatch = Stopwatch.StartNew(); // Запуск таймера
                 Bitmap processedImage = imageProcessor.ProcessImage(image);
                 stopwatch.Stop();
 
                 // Лог: время выполнения задачи
-                DisplayProcessingTime(stopwatch.ElapsedMilliseconds);
+                DisplayProcessingTime(stopwatch.ElapsedMilliseconds, clientId);
 
                 SendImage(stream, processedImage);
 
                 // Лог: изображение отправлено
-                Console.WriteLine("Обработанное изображение отправлено клиенту.");
+                Console.WriteLine($"Обработанное изображение отправлено клиенту #{clientId}.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка: {ex.Message}");
+            Console.WriteLine($"Ошибка у клиента #{clientId}: {ex.Message}");
         }
         finally
         {
@@ -60,16 +62,16 @@ public class ImageProcessingServer
         }
     }
 
-    private void DisplayProcessingTime(long elapsedMilliseconds)
+    private void DisplayProcessingTime(long elapsedMilliseconds, int clientId)
     {
         Console.ForegroundColor = ConsoleColor.Green; // Устанавливаем цвет текста
         if (elapsedMilliseconds > 1000)
         {
-            Console.WriteLine($"Время обработки: {elapsedMilliseconds / 1000.0:F2} секунд");
+            Console.WriteLine($"Время обработки для клиента #{clientId}: {elapsedMilliseconds / 1000.0:F2} секунд");
         }
         else
         {
-            Console.WriteLine($"Время обработки: {elapsedMilliseconds} мс");
+            Console.WriteLine($"Время обработки для клиента #{clientId}: {elapsedMilliseconds} мс");
         }
         Console.ResetColor(); // Сбрасываем цвет текста
     }
