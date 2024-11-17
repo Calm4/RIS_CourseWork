@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows;
@@ -36,10 +35,10 @@ namespace ImageProcessingClient
 
                     StatusLabel.Text = "Подключено к серверу.";
                     ConnectButton.Content = "Отключиться";
-                    ConnectButton.Background = new SolidColorBrush(Color.FromRgb(255, 69, 0)); // Красный цвет для отключения
+                    ConnectButton.Background = new SolidColorBrush(Color.FromRgb(255, 69, 0)); 
                     UploadButton.IsEnabled = true;
-                    btnLinearMode.IsEnabled = true; // Включаем кнопки обработки
-                    btnMultithreadedMode.IsEnabled = true; // Включаем кнопки обработки
+                    btnLinearMode.IsEnabled = true; 
+                    btnMultithreadedMode.IsEnabled = true; 
                 }
                 catch (Exception ex)
                 {
@@ -53,10 +52,10 @@ namespace ImageProcessingClient
                 _clientSocket = null;
                 StatusLabel.Text = "Отключено от сервера.";
                 ConnectButton.Content = "Подключиться";
-                ConnectButton.Background = new SolidColorBrush(Color.FromRgb(0, 122, 204)); // Синий цвет для подключения
+                ConnectButton.Background = new SolidColorBrush(Color.FromRgb(0, 122, 204));
                 UploadButton.IsEnabled = false;
-                btnLinearMode.IsEnabled = false; // Отключаем кнопки обработки
-                btnMultithreadedMode.IsEnabled = false; // Отключаем кнопки обработки
+                btnLinearMode.IsEnabled = false; 
+                btnMultithreadedMode.IsEnabled = false;
             }
         }
 
@@ -68,7 +67,7 @@ namespace ImageProcessingClient
             if (openFileDialog.ShowDialog() == true)
             {
                 string imagePath = openFileDialog.FileName;
-                _imageBytes = System.IO.File.ReadAllBytes(imagePath); // Загружаем изображение в байтовый массив
+                _imageBytes = System.IO.File.ReadAllBytes(imagePath); 
 
                 // Отображаем выбранное изображение
                 OriginalImage.Source = new BitmapImage(new Uri(imagePath));
@@ -81,14 +80,14 @@ namespace ImageProcessingClient
         {
             isMultithreaded = false;
             StatusLabel.Text = "Выбран режим: Линейный";
-            ProcessImage(); // Запуск обработки в линейном режиме
+            ProcessImage(); 
         }
 
         private void btnMultithreadedMode_Click(object sender, RoutedEventArgs e)
         {
             isMultithreaded = true;
             StatusLabel.Text = "Выбран режим: Многопоточный";
-            ProcessImage(); // Запуск обработки в многопоточном режиме
+            ProcessImage(); 
         }
 
         private void ProcessImage()
@@ -112,11 +111,9 @@ namespace ImageProcessingClient
                     Console.WriteLine("Отправлены байты изображения на сервер.");
 
                     StatusLabel.Text = "Изображение отправлено на сервер для обработки.";
-
-                    // Получаем обработанное изображение от сервера
+              
                     byte[] processedImageBytes = ReceiveProcessedImage();
 
-                    // Отображаем обработанное изображение
                     DisplayProcessedImage(processedImageBytes);
 
                     StatusLabel.Text = "Изображение обработано и отображено.";
@@ -135,12 +132,10 @@ namespace ImageProcessingClient
 
         private byte[] ReceiveProcessedImage()
         {
-            // Получаем размер обработанного изображения
             byte[] sizeBuffer = new byte[4];
             _clientSocket.Receive(sizeBuffer);
             int processedImageSize = BitConverter.ToInt32(sizeBuffer, 0);
 
-            // Получаем изображение
             byte[] processedImageBytes = new byte[processedImageSize];
             int totalReceived = 0;
             while (totalReceived < processedImageSize)

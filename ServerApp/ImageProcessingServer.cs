@@ -8,7 +8,7 @@ using System.Diagnostics;
 public class ImageProcessingServer
 {
     private const int Port = 8888;
-    private static int clientCounter = 0; // Счетчик клиентов
+    private static int clientCounter = 0;
 
     public void StartServer()
     {
@@ -19,7 +19,7 @@ public class ImageProcessingServer
         while (true)
         {
             TcpClient client = listener.AcceptTcpClient();
-            int clientId = ++clientCounter; // Присваиваем клиенту уникальный ID
+            int clientId = ++clientCounter;
             Console.WriteLine($"Клиент #{clientId} подключен.");
             Task.Run(() => HandleClient(client, clientId));
         }
@@ -36,19 +36,16 @@ public class ImageProcessingServer
                 IImageProcessor imageProcessor = CreateImageProcessor(stream);
                 Bitmap image = ReceiveImage(stream);
 
-                // Лог: загрузка изображения
                 Console.WriteLine($"Изображение получено от клиента #{clientId}.");
 
-                Stopwatch stopwatch = Stopwatch.StartNew(); // Запуск таймера
+                Stopwatch stopwatch = Stopwatch.StartNew();
                 Bitmap processedImage = imageProcessor.ProcessImage(image);
                 stopwatch.Stop();
 
-                // Лог: время выполнения задачи
                 DisplayProcessingTime(stopwatch.ElapsedMilliseconds, clientId);
 
                 SendImage(stream, processedImage);
 
-                // Лог: изображение отправлено
                 Console.WriteLine($"Обработанное изображение отправлено клиенту #{clientId}.");
             }
         }
@@ -64,7 +61,7 @@ public class ImageProcessingServer
 
     private void DisplayProcessingTime(long elapsedMilliseconds, int clientId)
     {
-        Console.ForegroundColor = ConsoleColor.Green; // Устанавливаем цвет текста
+        Console.ForegroundColor = ConsoleColor.Green;
         if (elapsedMilliseconds > 1000)
         {
             Console.WriteLine($"Время обработки для клиента #{clientId}: {elapsedMilliseconds / 1000.0:F2} секунд");
@@ -73,7 +70,7 @@ public class ImageProcessingServer
         {
             Console.WriteLine($"Время обработки для клиента #{clientId}: {elapsedMilliseconds} мс");
         }
-        Console.ResetColor(); // Сбрасываем цвет текста
+        Console.ResetColor();
     }
 
     private IImageProcessor CreateImageProcessor(NetworkStream stream)
