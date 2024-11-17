@@ -68,7 +68,7 @@ namespace ServerApp
                             {
                                 int calcOffset = byteOffset + (filterX * bytesPerPixel) + (filterY * stride);
 
-                                if (calcOffset >= 0 && calcOffset < srcBuffer.Length) // Проверка на выход за пределы массива
+                                if (calcOffset >= 0 && calcOffset < srcBuffer.Length) 
                                 {
                                     blue += srcBuffer[calcOffset] * filterMatrix[filterY + filterOffset, filterX + filterOffset];
                                     green += srcBuffer[calcOffset + 1] * filterMatrix[filterY + filterOffset, filterX + filterOffset];

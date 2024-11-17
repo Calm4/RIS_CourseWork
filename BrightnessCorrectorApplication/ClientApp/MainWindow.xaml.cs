@@ -11,13 +11,12 @@ namespace ImageProcessingClient
     public partial class MainWindow : Window
     {
         private Socket _clientSocket;
-        private byte[] _imageBytes; // Данные изображения хранятся здесь после загрузки
-        private bool isMultithreaded = false; // По умолчанию линейный режим
+        private byte[] _imageBytes; 
+        private bool isMultithreaded = false;
 
         public MainWindow()
         {
             InitializeComponent();
-            // Отключаем кнопки обработки по умолчанию
             btnLinearMode.IsEnabled = false;
             btnMultithreadedMode.IsEnabled = false;
         }
@@ -162,9 +161,9 @@ namespace ImageProcessingClient
                 bitmap.StreamSource = ms;
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
-                bitmap.Freeze(); // Зафиксировать, чтобы избежать блокировок
+                bitmap.Freeze(); 
 
-                ProcessedImage.Source = bitmap; // Отобразить обработанное изображение
+                ProcessedImage.Source = bitmap;
             }
         }
     }
