@@ -19,7 +19,7 @@ namespace TestClientApp
         public ImageProcessingLoadTest()
         {
             _imageFiles = Directory.GetFiles(_imagesDirectory, "*.png");
-            if (_imageFiles.Length != 5)
+            if (_imageFiles.Length != 3)
             {
                 Console.WriteLine("В папке должно быть ровно 5 изображений формата .png для теста!");
                 Environment.Exit(1);

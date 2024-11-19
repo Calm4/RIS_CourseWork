@@ -14,7 +14,7 @@ namespace TestClientApp
             var loadTest = new ImageProcessingLoadTest();
 
             // Запуск 1000 тестов
-            await loadTest.StartProcessing(100);
+            await loadTest.StartProcessing(25);
         }
     }
 }

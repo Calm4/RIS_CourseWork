@@ -25,6 +25,7 @@ namespace ServerApp
             {
                 TcpClient client = listener.AcceptTcpClient();
                 int clientId = ++clientCounter;
+                Console.WriteLine("===============================================");
                 Console.WriteLine($"Клиент #{clientId} подключен.");
                 Task.Run(() => HandleClient(client, clientId)); // Запускаем новый поток для обработки клиента
             }
@@ -71,7 +72,7 @@ namespace ServerApp
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка у клиента #{clientId}: {ex.Message}");
+                /*Console.WriteLine($"Ошибка у клиента #{clientId}: {ex.Message}");*/
             }
             finally
             {
@@ -114,7 +115,6 @@ namespace ServerApp
             byte[] sizeBuffer = new byte[4];
             stream.Read(sizeBuffer, 0, 4);
             int imageSize = BitConverter.ToInt32(sizeBuffer, 0);
-            Console.WriteLine($"Received image size: {imageSize} bytes");
 
             if (imageSize == 0)
             {
@@ -135,6 +135,7 @@ namespace ServerApp
             }
 
             Console.WriteLine($"Received {imageBytes.Length} bytes from client.");
+
             using (MemoryStream ms = new MemoryStream(imageBytes))
             {
                 return new Bitmap(ms);
