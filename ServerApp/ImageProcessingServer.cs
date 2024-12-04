@@ -17,7 +17,7 @@ namespace ServerApp
 
         public void StartServer()
         {
-            TcpListener listener = new TcpListener(IPAddress.Parse("127.0.0.1"), Port);
+            TcpListener listener = new TcpListener(IPAddress.Any, Port);
             listener.Start();
             Console.WriteLine($"Сервер запущен на 127.0.0.1:{Port}, ожидает подключения...");
 
@@ -27,7 +27,7 @@ namespace ServerApp
                 int clientId = ++clientCounter;
                 Console.WriteLine("===============================================");
                 Console.WriteLine($"Клиент #{clientId} подключен.");
-                Task.Run(() => HandleClient(client, clientId)); // Запускаем новый поток для обработки клиента
+                Task.Run(() => HandleClient(client, clientId));
             }
         }
 
@@ -72,7 +72,7 @@ namespace ServerApp
             }
             catch (Exception ex)
             {
-                /*Console.WriteLine($"Ошибка у клиента #{clientId}: {ex.Message}");*/
+                Console.WriteLine($"Ошибка у клиента #{clientId}: {ex.Message}");
             }
             finally
             {
