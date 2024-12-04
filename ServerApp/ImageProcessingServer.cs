@@ -19,7 +19,11 @@ namespace ServerApp
         {
             TcpListener listener = new TcpListener(IPAddress.Any, Port);
             listener.Start();
-            Console.WriteLine($"Сервер запущен на 127.0.0.1:{Port}, ожидает подключения...");
+
+            // Определяем текущий локальный IP-адрес
+            string localIP = GetLocalIPAddress();
+            Console.WriteLine($"Сервер запущен на {localIP}:{Port}, ожидает подключения...");
+
 
             while (true)
             {
@@ -154,5 +158,28 @@ namespace ServerApp
                 stream.Write(processedImageBytes, 0, processedImageBytes.Length);
             }
         }
+
+        private string GetLocalIPAddress()
+        {
+            string localIP = "Не удалось определить IP-адрес";
+            try
+            {
+                var host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        localIP = ip.ToString();
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при получении локального IP: {ex.Message}");
+            }
+            return localIP;
+        }
+
     }
 }
