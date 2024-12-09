@@ -84,11 +84,11 @@
             </Border>
         </StackPanel>
 
-        <!-- Блок ползунка яркости -->
+        <!-- Блок ползунка яркости
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="0,10,0,10">
             <TextBlock Text="Яркость:" VerticalAlignment="Center" Margin="5,0,0,0" />
             <Slider x:Name="BrightnessSlider" Minimum="-100" Maximum="100" Value="0" Width="200" Margin="5" />
-        </StackPanel>
+        </StackPanel> -->
 
         <!-- Блок изображений -->
         <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center" Margin="0,10,0,10">

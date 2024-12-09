@@ -1,10 +1,5 @@
-﻿using ServerApp;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
+﻿using System.Drawing;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace TestClientApp
 {
@@ -31,7 +26,7 @@ namespace TestClientApp
             string processedImagesDirectory = "ProcessedImages";
             if (!Directory.Exists(processedImagesDirectory))
             {
-                Directory.CreateDirectory(processedImagesDirectory); // Создаём папку, если её нет
+                Directory.CreateDirectory(processedImagesDirectory); 
             }
 
             for (int i = 0; i < numberOfTests; i++)
@@ -45,8 +40,8 @@ namespace TestClientApp
                     // Выбор режима обработки
                     string processingMode = (_random.Next(2) == 0) ? "Линейный" : "Многопоточный";
 
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine($"Тест #{i + 1}:");
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.WriteLine($"Тест #{i + 1 + 9000}:");
                     Console.WriteLine($"  Изображение: {Path.GetFileName(imageFile)}");
                     Console.WriteLine($"  Размер: {imageSize}");
                     Console.WriteLine($"  Режим обработки: {processingMode}");
@@ -57,16 +52,16 @@ namespace TestClientApp
                     Bitmap processedImage = await ProcessImageOnServer(image, processingMode);
 
                     stopwatch.Stop();
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine($"  Время обработки: {stopwatch.ElapsedMilliseconds} мс");
                     Console.ResetColor();
 
                     // Сохранение обработанного изображения
-                    string processedImagePath = Path.Combine(processedImagesDirectory, $"Processed_{Path.GetFileName(imageFile)}_{i + 1}.png");
+                    string processedImagePath = Path.Combine(processedImagesDirectory, $"Processed_{Path.GetFileName(imageFile)}_{i + 1 + 9000}.png");
                     processedImage.Save(processedImagePath, System.Drawing.Imaging.ImageFormat.Png);
 
                     // Подтверждение сохранения
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     Console.WriteLine($"  Обработанное изображение сохранено в: {processedImagePath}");
                     Console.ResetColor();
                 }
@@ -88,28 +83,23 @@ namespace TestClientApp
                 await client.ConnectAsync(ServerAddress, ServerPort);
                 NetworkStream stream = client.GetStream();
 
-                // Отправка режима обработки
                 byte modeByte = processingMode == "Линейный" ? (byte)0 : (byte)1;
                 stream.WriteByte(modeByte);
 
-                // Преобразование изображения в байты и отправка
                 using (MemoryStream ms = new MemoryStream())
                 {
                     image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                     byte[] imageBytes = ms.ToArray();
 
-                    Console.WriteLine($"Sending image with size: {imageBytes.Length} bytes");
-
                     byte[] sizeBytes = BitConverter.GetBytes(imageBytes.Length);
-                    await stream.WriteAsync(sizeBytes, 0, sizeBytes.Length); // Отправка размера
-                    await stream.WriteAsync(imageBytes, 0, imageBytes.Length); // Отправка изображения
+                    await stream.WriteAsync(sizeBytes, 0, sizeBytes.Length);
+                    await stream.WriteAsync(imageBytes, 0, imageBytes.Length); 
                 }
 
                 // Получение обработанного изображения
                 byte[] sizeBuffer = new byte[4];
                 await stream.ReadAsync(sizeBuffer, 0, 4);
                 int imageSize = BitConverter.ToInt32(sizeBuffer, 0);
-                Console.WriteLine($"Expected processed image size: {imageSize} bytes");
 
                 byte[] imageBuffer = new byte[imageSize];
                 int totalReceived = 0;

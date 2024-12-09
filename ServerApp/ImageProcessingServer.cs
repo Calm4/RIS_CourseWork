@@ -1,12 +1,8 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Drawing;
-using System.IO;
 using System.Diagnostics;
 using System.Drawing.Imaging;
-using System.Threading.Tasks;
 
 namespace ServerApp
 {

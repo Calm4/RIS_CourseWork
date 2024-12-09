@@ -1,11 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-
-namespace TestClientApp
+﻿namespace TestClientApp
 {
     public class Program
     {
@@ -13,7 +6,7 @@ namespace TestClientApp
         {
             var loadTest = new ImageProcessingLoadTest();
 
-            await loadTest.StartProcessing(25);
+            await loadTest.StartProcessing(1000);
         }
     }
 }

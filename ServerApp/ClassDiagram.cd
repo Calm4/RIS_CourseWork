@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ServerApp.AppEntryPoint" Collapsed="true">
+    <Position X="4.5" Y="1" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>AppEntryPoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerApp.ImageProcessingServer" Collapsed="true">
+    <Position X="4.5" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAIAAAAgAAAAAAAASAAAAgADAAAAACAAAAA=</HashCode>
+      <FileName>ImageProcessingServer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerApp.LinearImageProcessor" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2" Y="2" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAEAAAAAABAAAAAAA=</HashCode>
+      <FileName>LinearImageProcessor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ServerApp.MultithreadedImageProcessor" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAQAAAAAAAAAAAAFAAAAAAA=</HashCode>
+      <FileName>MultithreadedImageProcessor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="ServerApp.IImageProcessor" Collapsed="true">
+    <Position X="2" Y="1" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>IImageProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
